@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+    <head>
+        <link type = "text/css" rel = "stylesheet" href = "index.css"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+         <script type = "text/javascript" src = "d3.min.js"></script>
+        <script type="text/javascript" src = "index.js"></script>
+        <script type="text/javascript" src = "main_controller.js"></script>
+        <script type="text/javascript" src = "right_panel_controller.js"></script>
+        <script type="text/javascript" src = "services.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    </head>
+    <body ng-app = "mainApp">
+        <div class = "mainPanel" ng-controller = "mainController">
+            <div class = "leftPanel">
+                <div class = "tabsHeaderPanel">
+                    <ul class = "tabsHeader">
+                        <li class = "filterHead" ng-class = "{'selectedTab' : filterPanelActive}" id = "filterTab" ng-click = "filterPanelActive = 1">Filter</li>
+                        <li class = "snapshotHead" ng-class = "{'selectedTab' : !filterPanelActive}" id = "snapshotTab" ng-click = "filterPanelActive = 0">Snapshot</li>
+                    </ul>
+                </div>
+                <div class = "tabsBodyPanel">
+                    <div class = "filterPanel" ng-show = "filterPanelActive">
+                        
+                    </div>
+                    <div class = "snapshotPanel" ng-show = "!filterPanelActive">Snapshot Panel</div>
+                </div>
+            </div>
+            <div class = "rightPanel" ng-controller = "rightPanelController">
+                <div class = "graphContainer">
+                    <div id = "graph"></div>
+                </div>
+                <div class = "graphControls">
+                    <img src = "images/play.png" ng-click = "startLiveGraph()" ng-show = "!isGraphPlaying">
+                    <img src = "images/pause.png" ng-click = "stopCommunication()" ng-show = "isGraphPlaying">
+                    <img src = "images/record.png" ng-click = "startSnapshot()" ng-show = "!isGraphRecording">
+                    <img src = "images/stop_record.png" ng-click = "stopSnapshot()" ng-show = "isGraphRecording">
+                </div>
+                <div class = "channelConfig">
+                    <input type = "button" value = "1" id = "channel0" class = "channelButtons" ng-class = "{'selectedChannel' : channelSelected[0]}" ng-click = "changeButtonColor(0); $parent.populateFilter(0)" ng-disabled = "isGraphPlaying"/> 
+                    <input type = "button" value = "2" id = "channel1" class = "channelButtons" ng-class = "{'selectedChannel' : channelSelected[1]}" ng-click = "changeButtonColor(1); $parent.populateFilter(1)" ng-disabled = "isGraphPlaying"/> 
+                    <input type = "button" value = "3" id = "channel2" class = "channelButtons" ng-class = "{'selectedChannel' : channelSelected[2]}" ng-click = "changeButtonColor(2); $parent.populateFilter(2)" ng-disabled = "isGraphPlaying"/> 
+                    <input type = "button" value = "4" id = "channel3" class = "channelButtons" ng-class = "{'selectedChannel' : channelSelected[3]}" ng-click = "changeButtonColor(3); $parent.populateFilter(3)" ng-disabled = "isGraphPlaying"/> 
+                    <input type = "button" value = "5" id = "channel4" class = "channelButtons" ng-class = "{'selectedChannel' : channelSelected[4]}" ng-click = "changeButtonColor(4); $parent.populateFilter(4)" ng-disabled = "isGraphPlaying"/> 
+                    <input type = "button" value = "6" id = "channel5" class = "channelButtons" ng-class = "{'selectedChannel' : channelSelected[5]}" ng-click = "changeButtonColor(5); $parent.populateFilter(5)" ng-disabled = "isGraphPlaying"/> 
+                    <input type = "button" value = "7" id = "channel6" class = "channelButtons" ng-class = "{'selectedChannel' : channelSelected[6]}" ng-click = "changeButtonColor(6); $parent.populateFilter(6)" ng-disabled = "isGraphPlaying"/> 
+                    <input type = "button" value = "8" id = "channel7" class = "channelButtons" ng-class = "{'selectedChannel' : channelSelected[7]}" ng-click = "changeButtonColor(7); $parent.populateFilter(7)" ng-disabled = "isGraphPlaying"/> 
+                    <input type = "button" value = "9" id = "channel8" class = "channelButtons" ng-class = "{'selectedChannel' : channelSelected[8]}" ng-click = "changeButtonColor(8); $parent.populateFilter(8)" ng-disabled = "isGraphPlaying"/> 
+                    <input type = "button" value = "10" id = "channel9" class = "channelButtons" ng-class = "{'selectedChannel' : channelSelected[9]}" ng-click = "changeButtonColor(9); $parent.populateFilter(9)" ng-disabled = "isGraphPlaying"/> 
+                    <input type = "button" value = "11" id = "channel10" class = "channelButtons" ng-class = "{'selectedChannel' : channelSelected[10]}" ng-click = "changeButtonColor(10); $parent.populateFilter(10)" ng-disabled = "isGraphPlaying"/> 
+                    <input type = "button" value = "12" id = "channel11" class = "channelButtons" ng-class = "{'selectedChannel' : channelSelected[11]}" ng-click = "changeButtonColor(11); $parent.populateFilter(11)" ng-disabled = "isGraphPlaying"/> 
+                    <input type = "button" value = "13" id = "channel12" class = "channelButtons" ng-class = "{'selectedChannel' : channelSelected[12]}" ng-click = "changeButtonColor(12); $parent.populateFilter(12)" ng-disabled = "isGraphPlaying"/> 
+                    <input type = "button" value = "14" id = "channel13" class = "channelButtons" ng-class = "{'selectedChannel' : channelSelected[13]}" ng-click = "changeButtonColor(13); $parent.populateFilter(13)" ng-disabled = "isGraphPlaying"/> 
+                    <button id="sine" ng-click="generateSineWave()">Sine</button>
+                </div>
+                <center>
+                    <div class="adjustGraphConfig">
+                        <select ng-model="adjustGraphChannelNo">
+                            <option ng-repeat="x in channelArray">Channel {{x}}</option>
+                        </select></br></br>
+                        <!--<input type="range" min=0 max=5 defaultValue=0 ng-model="adjustGraphVal" ng-change="adjustGraph()">{{adjustGraphVal}}</br></br>-->
+                        <div id="slider">
+                           <input class="bar" min=0 max=5 type="range" ng-model="adjustGraphVal" ng-change="adjustGraph()" id="rangeinput"  onchange="rangevalue.value=value"/>
+                           <span class="highlight"></span>
+                           <output id="rangevalue">{{adjustGraphVal}}</output>
+                        </div>
+                    </div>
+                </center>
+            </div>
+        </div>
+    </body>
+</html>

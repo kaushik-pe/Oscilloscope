@@ -1,0 +1,10 @@
+{
+
+    "name" : "Oscilloscope",
+    "main" : "index.html",
+    "window" : {
+        "width" : 1000,
+        "min_width" : 900
+    }
+
+}
